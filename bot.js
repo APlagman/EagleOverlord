@@ -128,7 +128,7 @@ client.on("message", message => {
 
         console.log(`[${message.createdAt}] ${message.author} (${message.author.username}): ${message.content}`);
 
-        let args = message.content.split(/\s+/);
+        let args = message.content.trim().split(/\s+/);
         let messageCommandText = args.shift();
         let givenCommand = commands.find(com => { if (com.symbol === messageCommandText.substring(1)) return true; });
         let requiresGuild = (givenCommand != null) ? givenCommand.requiresGuild : false;
