@@ -9,6 +9,12 @@
   "author": "Zyliant",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "discord.js": "^11.3.0",
+    "request": "^2.83.0",
+    "strip-ansi": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/APlagman/EagleOverlord"
   }
 }
