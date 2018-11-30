@@ -594,4 +594,9 @@ function login() {
     }
 }
 
-login();
+if(require.main === module) {
+    login();
+}
+else {
+    module.exports.isValidPrefix = isValidPrefix;
+}
