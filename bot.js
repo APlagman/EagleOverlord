@@ -104,9 +104,7 @@ function changeRolesForMember(member, message, args, adding, isForOther, checkPr
 function listCommands(message) {
     let commandList = ""; 
     let visibleCommands = [];
-    if (message.guild != null) {
-        var authorMember = message.guild.member(message.author);
-    }
+    const authorMember = (message.guild != null) ? message.guild.member(message.author) : null;
 
     for (let i = 0; i < commands.length; ++i) {
         if (commands[i].visible && !commands[i].requiresGuild) {
@@ -380,12 +378,12 @@ function doCompileCommand(message, args) {
         if (results.error != null) {
             reportError(`Error: ${results.error}\nStatusCode: ${results.statusCode}`);
             message.channel.send(`<@${botCreatorID}> messed up, go poke him!`);
-        } else if (results.output) {
+        } else if (results.output != null) {
             message.channel.send(`Results for <@${message.author.id}>: \`\`\`${results.output.escape()}\`\`\``
             + `\nMemory: ${results.memory}, CPU Time: ${results.cpuTime}`);
         } else {
             client.fetchUser(botCreatorID)
-            .then(user => user.send(`Bad compile:\n${message.content}`));
+            .then(user => user.send(`Bad compile:\n${message.content}\n${JSON.stringify(results)}`));
         }
     });
 }
@@ -431,7 +429,7 @@ String.prototype.escape = function() {
 
 client.on(`ready`, () => {
     console.log(`Boot sequence complete.`);
-    client.user.setActivity(`with its food`);
+    client.user.setActivity(`with elves`);
 });
 
 client.on("messageUpdate", (oldMessage, newMessage) => {
@@ -459,7 +457,8 @@ function process(message) {
         if (requiresGuild && authorMember == null) {
             message.reply(`the given command requires a guild, but no matching guildMember was found. Please make sure you aren't using this command in a private message.`);
             return;
-        } else if (requiresGuild) {
+        }
+        if (authorMember != null) {
             let hasNeededPermissions = true;
             givenCommand.permissions.forEach(perm => { if (!authorMember.hasPermission(perm)) { hasNeededPermissions = false; }  });
             if (!hasNeededPermissions) {
